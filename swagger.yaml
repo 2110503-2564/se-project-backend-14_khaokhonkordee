@@ -16,6 +16,32 @@ components:
       bearerFormat: JWT
 
   schemas:
+    Room:
+      type: object
+      properties:
+        id:
+          type: string
+        roomNumber:
+          type: string
+        roomTypeId:
+          type: string
+        hotelId:
+          type: string
+        status:
+          type: string
+          enum: [available, occupied, maintenance, reserved]
+        floor:
+          type: number
+        specialNotes:
+          type: string
+        lastMaintenance:
+          type: string
+          format: date-time
+        features:
+          type: array
+          items:
+            type: string
+
     User:
       type: object
       properties:
@@ -110,6 +136,222 @@ components:
           type: string
         roomType:
           type: string
+
+paths:
+  /rooms:
+    get:
+      tags:
+        - Rooms
+      summary: Get all rooms
+      description: Get all rooms with optional filtering
+      parameters:
+        - name: hotelId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: floor
+          in: query
+          schema:
+            type: number
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+    post:
+      tags:
+        - Rooms
+      summary: Create new room
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Room'
+
+  /rooms/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Rooms
+      summary: Get single room
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Room'
+    put:
+      tags:
+        - Rooms
+      summary: Update room
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Room'
+    delete:
+      tags:
+        - Rooms
+      summary: Delete room
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+
+  /rooms/hotel/{hotelId}:
+    parameters:
+      - name: hotelId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Rooms
+      summary: Get rooms by hotel
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+
+  /rooms/available:
+    get:
+      tags:
+        - Rooms
+      summary: Get available rooms
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: hotelId
+          in: query
+          schema:
+            type: string
+        - name: roomTypeId
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+
+  /rooms/{id}/maintenance:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Rooms
+      summary: Set room to maintenance
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Room'
 
 paths:
   /auth/register:
