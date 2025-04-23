@@ -11,7 +11,6 @@ const roomTypeSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    unique: true, // Unique within the same hotel
     maxLength: 100,
   },
   description: {
