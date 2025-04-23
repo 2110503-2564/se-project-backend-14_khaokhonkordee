@@ -25,7 +25,6 @@ const roomSchema = new mongoose.Schema({
   },
   floor: {
     type: Number,
-    required: [true, "Floor number is required"],
   },
   specialNotes: {
     type: String,
