@@ -23,8 +23,13 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "admin"],
+    enum: ["user", "admin", "manager"],
     default: "user",
+  },
+  managedHotels: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Hotel',
+    default: []
   },
   password: {
     type: String,
