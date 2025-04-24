@@ -20,6 +20,9 @@ router.route('/')
   .get(getRooms)
   .post(protect, authorize('admin'), createRoom);
 
+router.route('/bulk')
+  .post(protect, authorize('admin'), bulkCreateRooms);
+
 router.route('/:id')
   .get(getRoom)
   .put(protect, authorize('admin'), updateRoom)
@@ -33,9 +36,6 @@ router.route('/type/:roomTypeId')
 
 router.route('/:id/status')
   .patch(protect, authorize('admin'), updateRoomStatus);
-
-router.route('/bulk')
-  .post(protect, authorize('admin'), bulkCreateRooms);
 
 router.route('/available')
   .get(getAvailableRooms);
